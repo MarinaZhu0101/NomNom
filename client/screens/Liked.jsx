@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext} from 'react';
-import { View, Text, StyleSheet, SafeAreaView, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, SafeAreaView, ScrollView, TouchableOpacity, Image } from 'react-native';
 import ToggleButton from '../Components/ToggleButton';
 import RestaurantCard from '../Components/RestroCards';
 import DishCard from '../Components/DishCards';
@@ -84,6 +84,25 @@ const Liked = ({ navigation }) => {
     }));
   };
 
+  const handleLogin = () => {
+    navigation.navigate('Login');
+  };
+
+  if (!user) {
+    return (
+      <SafeAreaView style={styles.logContainer}>
+        <View style={styles.notLog}>
+          <Text style={styles.loginText}>Please log in to see your favorite restaurants and dishes.</Text>
+          <TouchableOpacity style={styles.signin} onPress={handleLogin}>
+            <Text style={styles.textSign}>
+              Login
+            </Text>
+        </TouchableOpacity>
+        </View>
+      </SafeAreaView>
+    );
+  }
+
   // const filteredRestaurants = restaurants.filter(restaurant => 
   //   user.favouriteRestaurant.includes(restaurant._id)
   // );
@@ -137,7 +156,12 @@ const Liked = ({ navigation }) => {
                 />
               ))
            ) : (
-             <Text>No favourite restaurants found.</Text>
+            <SafeAreaView style={styles.container}>
+            <Image source={require('../assets/FavsRestro.png')} style={styles.heartImage}/>
+            <View style={styles}>
+                <Text style={styles.titleText}>Add your favs here!</Text>
+            </View>
+            </SafeAreaView>
            )}
          </View>
 
@@ -154,7 +178,12 @@ const Liked = ({ navigation }) => {
                 />
               ))
             ) : (
-              <Text>No favourite dishes found.</Text>
+              <SafeAreaView style={styles.container}>
+              <Image source={require('../assets/FavsDish.png')} style={styles.heartImage}/>
+              <View style={styles}>
+                  <Text style={styles.titleText}>Add your favs here!</Text>
+              </View>
+          </SafeAreaView>
             )}
           </View>
         )}
@@ -199,6 +228,58 @@ const styles = StyleSheet.create({
   },
   cardContainer: {
     alignItems: 'center',
+  },
+  logContainer:{
+    flex: 1,
+    backgroundColor: '#F5F5F5',
+    alignItems: 'center',    
+  },
+  notLog:{
+    flex: 1,
+    width: 300,
+    marginTop: 200,
+    alignItems:'center'
+  },
+  loginText: {
+    fontSize: 18,
+    fontFamily: 'Ubuntu-Medium',
+    textAlign: 'center',
+    marginTop: 50,
+  },
+
+  signin:{
+    width: '80%',
+    paddingVertical: 10,
+    backgroundColor: '#E65100',
+    marginTop: 30,
+    marginBottom: 20,
+    borderRadius: 30,
+    shadowColor: 'rgb(100, 100, 100)',
+    shadowOffset : {
+        width: 0,
+        height: 2
+    },
+    shadowOpacity: 0.8,
+    shadowRadius: 3,
+  },
+  textSign: {
+    fontSize: 16,
+    fontFamily:'Ubuntu-Medium',
+    color: 'white',
+    textAlign: 'center',
+  },
+  heartImage:{
+    width:200,
+    height: 200,
+    marginTop: 50,
+    marginLeft: 10
+  },
+  titleText:{
+    fontFamily: 'Ubuntu-Regular',
+    fontSize: 16,
+    width: 220,
+    textAlign: 'center',
+    marginTop: 20
   },
 });
 

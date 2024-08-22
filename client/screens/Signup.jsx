@@ -132,7 +132,12 @@ const SignUpScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.safeArea}>
         <ImageBackground source={require('../assets/gradient-abstract-background.jpg')} style={styles.background}>
+        <View style={styles.topSection}>
+          <TouchableOpacity style={styles.skip} onPress={()=>navigation.navigate('Home')}>
+            <Text style={styles.skipText}>Skip</Text>
+          </TouchableOpacity>
             <Image source={require('../assets/nomnom_logo.png')} style={styles.logo}/>
+          </View>
             <View style={styles.cardContainer}>
                 <View style={styles.card}>
                     <View style={styles.titleContainer}>
@@ -297,11 +302,25 @@ const styles = StyleSheet.create({
   background: {
       flex: 1,
     },
+    skip:{
+      paddingHorizontal: 20,
+      paddingVertical: 5,
+      backgroundColor: 'grey',
+      opacity: 0.6,
+      width: 70,
+      borderRadius: 20,
+      marginLeft: 300,
+      marginTop: 20
+    },
+    skipText:{
+      fontFamily: 'Ubuntu_Regular',
+      fontSize: 14,
+      color: 'white'
+    },
     logo: {
       width: 80,
       height: 80,
       borderRadius: 10,
-      marginTop: 20,
       marginLeft: 20
     },
     cardContainer: {

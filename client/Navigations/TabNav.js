@@ -22,6 +22,9 @@ import SearchList from '../screens/SearchList';
 import SearchListDefault from '../screens/SearchListDefault';
 import EndComments from '../screens/EndComments';
 import Password from '../screens/Password';
+import GuestScreen from '../screens/GuestScreem';
+import { AuthContext } from '../Context/AuthContext'; 
+import { useContext } from 'react';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -79,15 +82,25 @@ function LikedStack() {
 }
 
 function ProfileStack(){
+  const { user } = useContext(AuthContext); 
   return(
-    <Stack.Navigator screenOptions={ {headerShown: false } }>
-      <Stack.Screen name='ProfileMain' component={ProfileScreen}  />
-      <Stack.Screen name="ProfileCard" component={ProfileCard} />
-      <Stack.Screen name='Login' component={LoginScreen} />
-      <Stack.Screen name='Signup' component={SignUpScreen} />
-      <Stack.Screen name='Logout' component={LogoutPage} />
-      <Stack.Screen name="RestaurantDetail" component={RestaurantDetailStack} />
-      <Stack.Screen name='Password' component={Password}/>
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      {/* Conditional initial screen based on login status */}
+      {user ? (
+        <>
+          <Stack.Screen name='ProfileMain' component={ProfileScreen} />
+          <Stack.Screen name="ProfileCard" component={ProfileCard} />
+          <Stack.Screen name='Logout' component={LogoutPage} />
+          <Stack.Screen name='Password' component={Password} />
+        </>
+      ) : (
+        <>
+          <Stack.Screen name='Guest' component={GuestScreen} />
+          <Stack.Screen name='Login' component={LoginScreen} />
+          <Stack.Screen name='Signup' component={SignUpScreen} />
+          <Stack.Screen name='Password' component={Password} />
+        </>
+      )}
     </Stack.Navigator>
   )
 }

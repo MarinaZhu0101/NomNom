@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
     tagText:{
         color:'#6E6E6E',
         fontSize: 12,
-        fontWeight: '400'
+        fontFamily: 'Ubuntu_Regular',
     },
     selectedTag: {
         backgroundColor: '#FFB300',

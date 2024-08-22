@@ -1,11 +1,22 @@
-import { View, Text, StyleSheet, TouchableOpacity, Image} from "react-native"
-import { Feather } from "@expo/vector-icons"
-import { useState, useContext } from "react"
-import { AuthContext } from '../Context/AuthContext'; 
-import { CommonActions } from '@react-navigation/native'; 
+import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, ActivityIndicator, ScrollView, Image} from "react-native"
+import { useEffect, useState, useContext } from "react";
+import ProfileCard from "../Components/ProfileCard";
+import Achievements from "../Components/Achievements";
+import UserReview from "../Components/UserReviews";
+import ReviewBlock from "../Components/ReviewBlockk";
+import { AuthContext } from '../Context/AuthContext';
+import { Feather } from "@expo/vector-icons";
+import axios from 'axios';
 
 
-const ProfileCard = ({navigation}) => {
+const tabs = [
+    {key: 'achievements', title: 'Achievements'},
+    {key:'reviews', title: 'Reviews'}
+]
+
+const GuestScreen = ({navigation}) => {
+
+    const [activeTab, setActiveTab] = useState(tabs[0].key); 
     const { user, logout } = useContext(AuthContext);
 
     const tagsData = [
@@ -27,40 +38,35 @@ const ProfileCard = ({navigation}) => {
     const handleLogout = async () => {
         try {
             await logout();
-    
-            // Reset the navigation stack and navigate to GuestScreen
-            navigation.dispatch(
-                CommonActions.reset({
-                    index: 0,
-                    routes: [
-                        { name: 'Guest' }, 
-                    ],
-                })
-            );
+            navigation.navigate('Logout'); 
         } catch (error) {
             console.error('Error during logout:', error);
         }
     };
     
-
-    return(
-    <View style={styles.profileTopContainer}>
+    return (
+        <SafeAreaView style={styles.container}>
+        <ScrollView showsVerticalScrollIndicator={false}>
+        <View style={styles.profileTopContainer}>
         <View style={styles.userName}>
-            <Text style={styles.userNameText}>{user?.username || 'Guest'}</Text>
+            <Text style={styles.userNameText}>Guest</Text>
             <TouchableOpacity style={styles.settingIcon} onPress={toggleDropdown}>
                 <Feather name="settings" size={15} color={'white'}/>
             </TouchableOpacity>
         </View>
         {dropdownVisible && (
             <View style={styles.dropdownContainer}>
-                <TouchableOpacity style={styles.dropdownItem} onPress={handleLogout}>
-                    <Text style={styles.dropdownText}>Log Out</Text>
+                <TouchableOpacity style={styles.dropdownItem} onPress={handleLogin}>
+                    <Text style={styles.dropdownText}>Log In</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.dropdownItem} onPress={handleSignup}>
+                    <Text style={styles.dropdownText}>Sign Up</Text>
                 </TouchableOpacity>
             </View>
         )}
         <View style={styles.profileBottomContainer}>
             <View>
-                <Image source={require('../assets/avatar2.jpeg')}
+                <Image source={require('../assets/avatar.jpg')}
                 style={styles.profileImage}/>
                 <Image
                 source={{ uri: 'https://cdn.countryflags.com/thumbs/ireland/flag-round-250.png' }}
@@ -69,7 +75,7 @@ const ProfileCard = ({navigation}) => {
             </View>
             <View style={styles.levelContainer}>
                 <Text style={styles.levelText}>
-                    Food Critic Level 25
+                    Food Critic Level 0
                 </Text>
                 <Feather name="chevron-right" size={16} color={'#FFB300'}/>
             </View>
@@ -88,15 +94,83 @@ const ProfileCard = ({navigation}) => {
 
             
             <View style={styles.bioContainer}>
-                <Text style={styles.bioText}>Shrimp Dumpling Eater</Text>
+                <Text style={styles.bioText}>Hello welcome to NomNom</Text>
                 <Feather name="edit-3" size={15} color={'#9E9E9E'}/>
             </View>
         </View>
     </View>
+            <View style={styles.tabsContainer}>
+                {tabs.map((tab)=>(
+                    <TouchableOpacity
+                        key={tab.key}
+                        style={[styles.tab, activeTab === tab.key && styles.activeTab]}
+                        onPress={() => setActiveTab(tab.key)}
+                    >
+                        <Text style={[styles.tabText, activeTab === tab.key && styles.activeTabText]}>{tab.title}</Text>
+                    </TouchableOpacity>
+                ))}
+            </View>
+            <View style={styles.contentContainer}>
+            {activeTab === 'achievements' && (
+                <View style={styles.guestLog}>
+                    <TouchableOpacity style={styles.guestLogButton} onPress={()=>{navigation.navigate('Login')}}>
+                        <Text style={styles.guestLogText}>Guest Login</Text>
+                    </TouchableOpacity>
+                    <Image 
+                        source={require('../assets/5 SCENE.png')} 
+                        style={styles.tabImage}
+                    />
+                </View>
+            )}
+            {activeTab === 'reviews' && (
+                <View style={styles.guestLog}>
+                <TouchableOpacity style={styles.guestLogButton} onPress={()=>{navigation.navigate('Login')}}>
+                    <Text style={styles.guestLogText}>Guest Login</Text>
+                </TouchableOpacity>
+                <Image 
+                    source={require('../assets/2 SCENE.png')} 
+                    style={styles.tabImage}
+                />
+            </View>
+            )}
+            </View>
+        </ScrollView>
+        </SafeAreaView>
     )
 }
 
 const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: 'white'
+    },
+    tabsContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        marginTop: 20,
+    },
+    tab: {
+        paddingBottom: 10,
+        borderBottomWidth: 2,
+        fontFamily:'Ubuntu-Medium',
+        borderColor: 'transparent',
+    },
+    activeTab: {
+        borderColor: '#FFB300',
+    },
+    tabText: {
+        fontSize: 16,
+        fontFamily:'Ubuntu-Medium',
+        color: '#9E9E9E',
+    },
+    activeTabText: {
+        fontSize: 16,
+         fontFamily:'Ubuntu-Medium',
+        color: 'black'
+    },
+    contentContainer: {
+        padding: 20,
+    },
     profileTopContainer:{
         height: 300,
         backgroundColor: 'white',
@@ -119,7 +193,7 @@ const styles = StyleSheet.create({
     userNameText: {
         fontFamily: 'Ubuntu-Medium',
         fontSize: 24,
-        paddingRight: 125
+        paddingRight: 118
     },
     settingIcon:{
         justifyContent: 'center',
@@ -196,7 +270,6 @@ const styles = StyleSheet.create({
 
     bioText: {
         fontFamily: 'Ubuntu-Regular',
-        // marginHorizontal: 16,
         color: '#9E9E9E'
     },
 
@@ -224,6 +297,33 @@ const styles = StyleSheet.create({
         fontFamily: 'Ubuntu-Regular',
         fontSize: 15,
     },
+    tabImage:{
+        width: 300,
+        height: 150,
+    },
+    contentContainer:{
+        alignItems:'center',
+        marginVertical: 30
+    },
+    guestLog:{
+        alignItems:'center'
+    },
+    guestText:{
+        fontSize: 12,
+        fontFamily: 'Ubuntu-Regular',
+        color: 'black'
+    },
+    guestLogButton:{
+        backgroundColor: '#FFB300',
+        padding: 10,
+        borderRadius: 20,
+        marginVertical: 20
+    },
+    guestLogText:{
+        color:'white',
+        fontFamily: 'Ubuntu-Regular',
+        fontSize: 15,
+    }
 })
 
-export default ProfileCard
+export default GuestScreen;

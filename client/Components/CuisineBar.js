@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
     cuisineText: {
         fontSize: 12,
         color: '#6E6E6E',
-        fontWeight: '500',
+        fontFamily: 'Ubuntu_Regular',
         paddingTop: 5
     },
 })

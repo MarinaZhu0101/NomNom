@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
     },
     vibeNameText :{
         fontSize: 12,
-        fontWeight: '500',
+        fontFamily: 'Ubuntu_Regular',
         color: '#6E6E6E'
     }
   });

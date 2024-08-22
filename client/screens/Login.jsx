@@ -27,7 +27,7 @@ const LoginScreen = ({ navigation }) => {
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={{ flex: 1 }}>
       <ImageBackground source={require('../assets/geometric-background.jpg')} style={styles.background}>
-        <TouchableOpacity style={styles.skip}>
+        <TouchableOpacity style={styles.skip} onPress={()=>navigation.navigate('Home')}>
           <Text style={styles.skipText}>Skip</Text>
         </TouchableOpacity>
         <View style={styles.topSection}>
